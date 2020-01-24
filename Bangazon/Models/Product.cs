@@ -11,6 +11,8 @@ namespace Bangazon.Models
         [Key]
         public int ProductId {get;set;}
 
+        public bool LocalDeliveryAvailable { get; set; }
+
         [Required]
         [DataType(DataType.Date)]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]

@@ -142,7 +142,8 @@ namespace Bangazon.Data {
                     Description = "It flies high",
                     Title = "Kite",
                     Quantity = 100,
-                    Price = 2.99
+                    Price = 2.99,
+                    LocalDeliveryAvailable = false
                 },
                 new Product()
                 {
@@ -152,7 +153,8 @@ namespace Bangazon.Data {
                     Description = "It rolls fast",
                     Title = "Wheelbarrow",
                     Quantity = 5,
-                    Price = 29.99
+                    Price = 29.99,
+                    LocalDeliveryAvailable = false
                 },
                 new Product()
                 {
@@ -162,7 +164,8 @@ namespace Bangazon.Data {
                     Description = "It cuts things",
                     Title = "Saw",
                     Quantity = 18,
-                    Price = 31.49
+                    Price = 31.49,
+                    LocalDeliveryAvailable = false
                 },
                 new Product()
                 {
@@ -172,7 +175,8 @@ namespace Bangazon.Data {
                     Description = "It puts holes in things",
                     Title = "Electric Drill",
                     Quantity = 12,
-                    Price = 24.89
+                    Price = 24.89,
+                    LocalDeliveryAvailable = false
                 },
                 new Product()
                 {
@@ -182,7 +186,8 @@ namespace Bangazon.Data {
                     Description = "It puts things together",
                     Title = "Hammer",
                     Quantity = 32,
-                    Price = 22.69
+                    Price = 22.69,
+                    LocalDeliveryAvailable = false
                 }
             );
 
