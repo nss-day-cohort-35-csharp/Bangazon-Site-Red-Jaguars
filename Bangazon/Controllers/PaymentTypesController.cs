@@ -52,9 +52,11 @@ namespace Bangazon.Controllers
         }
 
         // GET: PaymentTypes/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "UserName");
+            var user = await GetCurrentUserAsync();
+            var users = _context.Users.Where(a => a.Id == user.Id);
+           // ViewData["UserId"] = new SelectList(users, "Id", "UserName");
             return View();
         }
 
@@ -65,13 +67,17 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PaymentTypeId,DateCreated,Description,AccountNumber,UserId")] PaymentType paymentType)
         {
+            var user = await GetCurrentUserAsync();
+            paymentType.UserId = user.Id;
+            ModelState.Remove("User");
+            ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
                 _context.Add(paymentType);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "UserName", paymentType.UserId);
+            //ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "UserName", paymentType.UserId);
             return View(paymentType);
         }
 
@@ -104,6 +110,9 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
+            var user = await GetCurrentUserAsync();
+            paymentType.UserId = user.Id;
+            ModelState.Remove("User");
             if (ModelState.IsValid)
             {
                 try
