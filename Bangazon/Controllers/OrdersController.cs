@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Bangazon.Data;
 using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
+using Bangazon.Models.OrderViewModels;
 
 namespace Bangazon.Controllers
 {
@@ -34,12 +35,12 @@ namespace Bangazon.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Orders/Details/5
+        // GET: Orders/Details/
         public async Task<IActionResult> Details(int? id)
         {
 
 
-          var User = await GetCurrentUserAsync();
+          var user = await GetCurrentUserAsync();
 
             
 
@@ -48,13 +49,24 @@ namespace Bangazon.Controllers
                 .Include(o => o.User)
                 .Include(o => o.OrderProducts)
                     .ThenInclude(op => op.Product)
-                .FirstOrDefaultAsync(m => m.UserId == User.Id && m.DateCompleted == null);
+                .FirstOrDefaultAsync(m => m.UserId == user.Id && m.DateCompleted == null);
             if (order == null)
             {
                 return NotFound();
             }
 
-            return View(order);
+            var shoppingCart = new OrderDetailViewModel(order);
+            shoppingCart.LineItems = order.OrderProducts.GroupBy(op => op.ProductId)
+                               .Select(pr => new OrderLineItem
+                               {
+                                   Units = pr.Count(),
+                                   Cost = pr.Sum(c => c.Product.Price),
+                                   Product = pr.First().Product
+
+
+                               }).ToList();
+
+            return View(shoppingCart);
         }
 
         // GET: Orders/Create
@@ -91,12 +103,15 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
+            var user = await GetCurrentUserAsync();
+            //var userPaymentTypes = _context.PaymentType.Include(p => p.User).Where(a => a.User.Id == user.Id);
+
             var order = await _context.Order.FindAsync(id);
             if (order == null)
             {
                 return NotFound();
             }
-            ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
+            ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType.Include(p => p.User).Where(a => a.User.Id == user.Id), "PaymentTypeId", "PaymentDetails", order.PaymentTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", order.UserId);
             return View(order);
         }
