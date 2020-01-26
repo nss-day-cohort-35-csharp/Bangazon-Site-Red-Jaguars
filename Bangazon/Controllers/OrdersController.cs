@@ -39,7 +39,7 @@ namespace Bangazon.Controllers
                                 .Include(o => o.User)
                                 .Include(o => o.OrderProducts)
                                     .ThenInclude(op => op.Product)
-                                .Where(m => m.UserId == user.Id);
+                                .Where(m => m.UserId == user.Id && m.DateCompleted != null);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -83,6 +83,7 @@ namespace Bangazon.Controllers
                 .FirstOrDefaultAsync(m => m.UserId == user.Id && m.DateCompleted == null);
                 if (order == null)
                 {
+                    TempData["ErrorMessage"] = $"Sorry {user.FirstName}, your shopping cart is empty!"; 
                     return RedirectToAction("Index");
                     
                 }
@@ -167,8 +168,6 @@ namespace Bangazon.Controllers
             if (!ModelState.IsValid)
             {
                 var errors = ModelState.SelectMany(x => x.Value.Errors.Select(z => z.Exception));
-                
-                
 
                 // Breakpoint, Log or examine the list with Exceptions.
             }
@@ -192,6 +191,7 @@ namespace Bangazon.Controllers
                         throw;
                     }
                 }
+                TempData["SuccessMessage"] = "Wooooo Hoo!  You have placed your order successfully.";
                 return RedirectToAction(nameof(Index));
             }
             

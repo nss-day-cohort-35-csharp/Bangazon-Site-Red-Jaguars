@@ -5,8 +5,8 @@
 @{
     ViewData["Title"] = "Details";
 }
-
-<h1>Shopping Cart</h1>
+@if (Model.Order.DateCompleted == null)
+{<h1>Shopping Cart</h1>}
 
 <div>
     <h4>Order # @Html.DisplayFor(model => model.Order.OrderId)</h4>
