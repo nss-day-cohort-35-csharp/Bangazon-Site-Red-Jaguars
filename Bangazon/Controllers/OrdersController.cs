@@ -98,7 +98,7 @@ namespace Bangazon.Controllers
 
 
                                    }).ToList();
-
+               // ViewBag.Total = shoppingCart.LineItems.
                 return View(shoppingCart);
             }
 
@@ -223,12 +223,21 @@ namespace Bangazon.Controllers
         // POST: Orders/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(OrderProduct item)
         {
-            var order = await _context.Order.FindAsync(id);
-            _context.Order.Remove(order);
+            var user = await GetCurrentUserAsync();
+
+            //var item = await _context.OrderProduct
+            //    .Include(op => op.Order)
+            //    .FirstOrDefaultAsync(op => op.Order.UserId == user.Id && op.Order.DateCompleted == null && op.ProductId == id);
+
+            var itemToDelete = await _context.OrderProduct
+                           .FirstOrDefaultAsync(op => op.OrderProductId == item.OrderProductId);
+
+
+            _context.OrderProduct.Remove(itemToDelete);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details));
         }
 
         private bool OrderExists(int id)
