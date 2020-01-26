@@ -16,7 +16,7 @@
             <input type="hidden" asp-for="UserId" />
             <input type="hidden" asp-for="DateCompleted" />
             <input type="hidden" asp-for="DateCreated" />
-            <input type="hidden" asp-for="User" />
+            @Html.HiddenFor(m => m.User)
             @*<div class="form-group">
             <label asp-for="DateCompleted" class="control-label"></label>
             <input asp-for="DateCompleted" class="form-control" />

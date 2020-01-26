@@ -22,7 +22,7 @@ namespace Bangazon.Models
     [Required]
     public string UserId {get; set;}
 
-    [Required]
+   // [Required]
     public ApplicationUser User { get; set; }
 
     public int? PaymentTypeId {get;set;}
