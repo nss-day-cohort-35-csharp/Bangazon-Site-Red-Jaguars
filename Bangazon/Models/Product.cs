@@ -46,7 +46,7 @@ namespace Bangazon.Models
         public string UserId { get; set; }
 
         //[Required(ErrorMessage = "City name is required")]
-        //[Display(Name = "City")]
+        [Display(Name = "City")]
         //[StringLength(99, ErrorMessage = "City name has to have less than 99 characters")]
         public string City { get; set; }
 
