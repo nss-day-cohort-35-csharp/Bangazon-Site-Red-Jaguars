@@ -9,9 +9,7 @@
 
 <h2>Completed Orders</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -21,9 +19,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.DateCompleted)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
+           
             <th>
                 @Html.DisplayNameFor(model => model.PaymentType)
             </th>
@@ -40,14 +36,12 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.DateCompleted)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.User.Id)
-                </td>
+                
                 <td>
                     @Html.DisplayFor(modelItem => item.PaymentType.PaymentDetails)
                 </td>
                 <td>
-                    |
+                    
                     <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> 
 
                 </td>

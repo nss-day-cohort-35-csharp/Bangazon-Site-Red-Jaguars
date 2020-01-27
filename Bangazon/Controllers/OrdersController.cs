@@ -249,8 +249,8 @@ namespace Bangazon.Controllers
             foreach (OrderProduct product in itemsToDelete)
             {
                 _context.OrderProduct.Remove(product);
+               
             }
-
             await _context.SaveChangesAsync();
 
             var orderToDelete = _context.Order.Where(o => o.OrderId == item.OrderId && o.UserId == user.Id);
