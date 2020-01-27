@@ -4,11 +4,9 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Payment Types</h1>
+<h5 class="alert-danger">@TempData["ErrorMessage"]</h5>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -37,9 +35,11 @@
                 @Html.DisplayFor(modelItem => item.AccountNumber)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.PaymentTypeId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.PaymentTypeId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.PaymentTypeId">Delete</a>
+                <form asp-action="Delete" asp-route-id="@item.PaymentTypeId">
+                    
+                    <input type="submit" value="Delete" class="btn btn-danger" /> 
+                </form>
+               
             </td>
         </tr>
 }

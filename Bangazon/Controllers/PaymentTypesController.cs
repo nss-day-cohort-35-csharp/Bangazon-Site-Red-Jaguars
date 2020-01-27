@@ -161,11 +161,23 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+    
+            var paymentAssigned = await _context.Order.FirstOrDefaultAsync(o => o.PaymentTypeId == id);
 
-            var paymentType = await _context.PaymentType.FindAsync(id);
-            _context.PaymentType.Remove(paymentType);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if( paymentAssigned != null)
+            {
+               TempData["ErrorMessage"] = "You can't delete this paymeny type because it has been assigned to an existing order";
+               return RedirectToAction(nameof(Index));
+            }
+            else 
+            {
+                var paymentType = await _context.PaymentType.FindAsync(id);
+                _context.PaymentType.Remove(paymentType);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index", "Home");
+            }
+           
+
         }
 
         private bool PaymentTypeExists(int id)
@@ -174,5 +186,7 @@ namespace Bangazon.Controllers
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
+        
     }
 }
