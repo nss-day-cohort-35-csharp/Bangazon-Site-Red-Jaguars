@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -57,7 +58,7 @@ namespace Bangazon.Models
         [Required]
         public ApplicationUser User { get; set; }
 
-        [Required]
+        [BindRequired]
         [Display(Name = "Product Category")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Please choose Product category")]
         public int ProductTypeId { get; set; }
