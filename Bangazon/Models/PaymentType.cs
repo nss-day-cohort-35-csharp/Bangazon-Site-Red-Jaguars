@@ -34,7 +34,7 @@ namespace Bangazon.Models
 
         //added to concat description and account number in multiselect
 
-        [Display(Description = "Payment Information")]
+        [Display(Name = "Payment Information")]
 
         public string PaymentDetails => string.Format("{0} {1}", Description, AccountNumber);
     }
