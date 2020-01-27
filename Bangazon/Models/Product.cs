@@ -11,6 +11,7 @@ namespace Bangazon.Models
         [Key]
         public int ProductId { get; set; }
 
+        [Display(Name = "Local delivery available")] 
         public bool LocalDeliveryAvailable { get; set; }
 
         [Required(ErrorMessage = "Date Created is required")]
@@ -32,11 +33,12 @@ namespace Bangazon.Models
         [Required(ErrorMessage = "Product price is required")]
         [Display(Name = "Price")]
         [DisplayFormat(DataFormatString = "{0:C}")]
-        [Range(18, 10000, ErrorMessage = "Price should have positive value")]
+        [Range(0.00, 10000.00, ErrorMessage = "Price should have positive value and less than 10K")]
         public double Price { get; set; }
 
         [Required(ErrorMessage = "Available product quantity is required")]
         [Display(Name = "Quantity")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Quantity should have positive value")]
         public int Quantity { get; set; }
 
         [Required(ErrorMessage = "User Id is required")]
@@ -44,7 +46,7 @@ namespace Bangazon.Models
         public string UserId { get; set; }
 
         //[Required(ErrorMessage = "City name is required")]
-        //[Display(Name = "City")]
+        [Display(Name = "City")]
         //[StringLength(99, ErrorMessage = "City name has to have less than 99 characters")]
         public string City { get; set; }
 
