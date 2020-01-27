@@ -164,7 +164,7 @@ namespace Bangazon.Controllers
             var paymentType = await _context.PaymentType.FindAsync(id);
             _context.PaymentType.Remove(paymentType);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Home");
         }
 
         private bool PaymentTypeExists(int id)
