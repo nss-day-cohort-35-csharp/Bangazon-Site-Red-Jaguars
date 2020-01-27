@@ -1,0 +1,38 @@
+﻿@model IEnumerable<Bangazon.Models.ProducTypesViewModels.TypeWithProducts>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Product Categories</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TypeName)
+            </th>
+          
+    </tr>
+</thead>
+<tbody>
+    @foreach (var productType in Model)
+    {
+    <td>
+        @Html.DisplayFor(modelItem => productType.TypeName) (@Html.DisplayFor(modelItem => productType.ProductCount))
+        <div>
+            <ul class="list-group">
+                @foreach (var product in productType.Products)
+                {
+                    <li class="list-group-item">
+                       <a asp-controller="Products" asp-action="Details" asp-route-Id="@product.ProductId"> @Html.DisplayFor(modelItem => product.Title)</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </td>
+}
+    
+    </tbody>
+</table>
