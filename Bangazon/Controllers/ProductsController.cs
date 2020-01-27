@@ -49,7 +49,12 @@ namespace Bangazon.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label");
+            //var selectList = new SelectList(_context.ProductType, "ProductTypeId", "Label");
+            //SelectListItem newItem = new SelectListItem { Text = "Please choose product type", Value = "0" };
+
+            //ViewData["ProductTypeId"] = new SelectList(selectList, new SelectListItem { Text = "Please choose product type", Value = "0" });
+            
+            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", new SelectListItem { Value = "0", Text="fake" } );
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
             return View();
         }
