@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Bangazon.Data;
 using Bangazon.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Bangazon.Models.ProductViewModels;
 
 namespace Bangazon.Controllers
 {
@@ -27,32 +29,76 @@ namespace Bangazon.Controllers
         //  var user = await GetCurrentUserAsync();
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
-            var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User);
-            return View(await applicationDbContext.ToListAsync());
-        }
 
+            if (string.IsNullOrWhiteSpace(search))
+            {
+                var applicationDbContext = _context.Product
+                    .Include(p => p.ProductType)
+                    .Include(p => p.User);
+                return View(await applicationDbContext.ToListAsync());
+            }
+            else
+            {
+                var applicationDbContext = _context.Product
+                    .Include(p => p.ProductType)
+                    .Include(p => p.User)
+                    //.FirstOrDefaultAsync(p => p.Title.Contains(search));
+                    .Where(p => p.Title.Contains(search));
+
+                return View(await applicationDbContext.ToListAsync());
+            }
+
+            //cmd.CommandText = @"SELECT Id, PurchaseDate, DecomissionDate, Make, Model FROM Computer";
+            //if (!string.IsNullOrWhiteSpace(search))
+            //{
+            //    cmd.CommandText += @" WHERE Make LIKE @searchString OR Model LIKE @searchString";
+            //}
+            //cmd.Parameters.Add(new SqlParameter("@searchString", "%" + search + "%"));
+        }
         // GET: Products/Details/5
+        //public async Task<IActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var product = await _context.Product
+        //        .Include(p => p.ProductType)
+        //        .Include(p => p.User)
+        //        .FirstOrDefaultAsync(m => m.ProductId == id);
+        //    if (product == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(product);
+        //}
+        //
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
             var product = await _context.Product
-                .Include(p => p.ProductType)
-                .Include(p => p.User)
-                .FirstOrDefaultAsync(m => m.ProductId == id);
+   .Include(p => p.ProductType)
+   .Include(p => p.User)
+   .Include(p => p.OrderProducts)
+   .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
             {
                 return NotFound();
             }
-
-            return View(product);
+            var productDetail = new ProductDetailViewModel()
+            {
+                Product = product,
+                Inventory = product.Quantity - product.OrderProducts.Count()
+            }; return View(productDetail);
         }
-
+        //
         // GET: Products/Create
         public IActionResult Create()
         {
