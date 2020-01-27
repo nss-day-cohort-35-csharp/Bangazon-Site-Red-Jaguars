@@ -97,7 +97,7 @@
                     @Html.DisplayFor(modelItem => item.Units)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Cost)
+                    @Html.DisplayFor(modelItem => Math.Round(item.Cost, 2, MidpointRounding.ToEven))
                 </td>
                 <td>
 
