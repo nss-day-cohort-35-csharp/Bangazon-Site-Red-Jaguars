@@ -161,6 +161,7 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+    
             var paymentAssigned = await _context.Order.FirstOrDefaultAsync(o => o.PaymentTypeId == id);
 
             if( paymentAssigned != null)
@@ -176,6 +177,7 @@ namespace Bangazon.Controllers
                 return RedirectToAction("Index", "Home");
             }
            
+
         }
 
         private bool PaymentTypeExists(int id)
