@@ -81,7 +81,7 @@ namespace Bangazon.Controllers
                 .Include(o => o.OrderProducts)
                     .ThenInclude(op => op.Product)
                 .FirstOrDefaultAsync(m => m.UserId == user.Id && m.DateCompleted == null);
-                if (order == null)
+                if (order.OrderProducts.Count() == 0 || order == null)
                 {
                     TempData["ErrorMessage"] = $"Sorry {user.FirstName}, your shopping cart is empty!"; 
                     return RedirectToAction("Index");
