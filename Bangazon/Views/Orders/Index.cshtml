@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Bangazon.Models.Order>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2 class="alert-danger">@TempData["ErrorMessage"]</h2>
+<h2 class="alert-success">@TempData["SuccessMessage"]</h2>
+
+<h2>Completed Orders</h2>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DateCreated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateCompleted)
+            </th>
+           
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentType.PaymentDetails)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCompleted)
+                </td>
+                
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentType.PaymentDetails)
+                </td>
+                <td>
+                    
+                    <a asp-action="Details" asp-route-id="@item.OrderId">Details</a> 
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
