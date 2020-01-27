@@ -161,6 +161,7 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+
             var paymentType = await _context.PaymentType.FindAsync(id);
             _context.PaymentType.Remove(paymentType);
             await _context.SaveChangesAsync();
