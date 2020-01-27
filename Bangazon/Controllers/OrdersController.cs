@@ -227,10 +227,6 @@ namespace Bangazon.Controllers
         {
             var user = await GetCurrentUserAsync();
 
-            //var item = await _context.OrderProduct
-            //    .Include(op => op.Order)
-            //    .FirstOrDefaultAsync(op => op.Order.UserId == user.Id && op.Order.DateCompleted == null && op.ProductId == id);
-
             var itemToDelete = await _context.OrderProduct
                            .FirstOrDefaultAsync(op => op.OrderProductId == item.OrderProductId);
 
@@ -238,6 +234,35 @@ namespace Bangazon.Controllers
             _context.OrderProduct.Remove(itemToDelete);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Details));
+        }
+
+        // POST: Orders/Delete/5
+        [HttpPost, ActionName("DeleteOrder")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteOrder(OrderProduct item)
+        {
+            var user = await GetCurrentUserAsync();
+
+            var itemsToDelete = _context.OrderProduct
+                           .Where(op => op.OrderId == item.OrderId);
+
+            foreach (OrderProduct product in itemsToDelete)
+            {
+                _context.OrderProduct.Remove(product);
+            }
+
+            await _context.SaveChangesAsync();
+
+            var orderToDelete = _context.Order.Where(o => o.OrderId == item.OrderId && o.UserId == user.Id);
+
+            foreach (Order order in orderToDelete)
+            {
+                _context.Order.Remove(order);
+                
+            }
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         private bool OrderExists(int id)

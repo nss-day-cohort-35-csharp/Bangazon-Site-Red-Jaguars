@@ -122,6 +122,15 @@
     Total Order Cost: $@Math.Round(Model.LineItems.Sum(m => m.Cost), 2, MidpointRounding.ToEven)
 </h4>
 
+@if (Model.Order.DateCompleted == null)
+{
+<form asp-action="DeleteOrder">
+    <input type="hidden" asp-for="LineItems.First().Product.OrderProducts.First().OrderId" />
+    <input type="submit" value="Delete" class="btn btn-danger" /> 
+   
+</form>
+}
+
 
 @*<div>
         <a asp-action="Edit" asp-route-id="@Model.Order.OrderId">Edit</a>
