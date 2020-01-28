@@ -161,11 +161,11 @@ namespace Bangazon.Controllers
 
                 //check if product is in stock
 
-                var product = await _context.Product
-                   .Include(p => p.ProductType)
-                   .Include(p => p.User)
-                   .Include(p => p.OrderProducts)
-                   .FirstOrDefaultAsync(m => m.ProductId == id);
+                //var product = await _context.Product
+                //   .Include(p => p.ProductType)
+                //   .Include(p => p.User)
+                //   .Include(p => p.OrderProducts)
+                //   .FirstOrDefaultAsync(m => m.ProductId == id);
 
 
 
