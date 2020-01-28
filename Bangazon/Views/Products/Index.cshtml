@@ -4,15 +4,17 @@
     ViewData["Title"] = "Index";
 }
 
+<h2 class="alert-danger">@TempData["ErrorMessage"]</h2>
+
 <h1>All Products</h1>
 
 <p>
-   @** <div><a asp-action="Create">Create New</a></div>
-    <div class="searchWrapper">
-        <form class="searchBox">
-            <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search Product" aria-label="Search">
-        </form>
-    </div>*@
+    @** <div><a asp-action="Create">Create New</a></div>
+        <div class="searchWrapper">
+            <form class="searchBox">
+                <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search Product" aria-label="Search">
+            </form>
+        </div>*@
 </p>
 <table class="table table-striped">
     <thead class="thead-dark">
@@ -36,8 +38,8 @@
                 @Html.DisplayNameFor(model => model.Price)
             </th>
             @*<th>
-            @Html.DisplayNameFor(model => model.Quantity)
-        </th>*@
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.City)
             </th>
@@ -53,49 +55,49 @@
     <tbody >
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                
-                    <img class="img-thumbnail" style="max-width: 150px;" src="@Url.Content("~/images/" + item.ImagePath)" alt="" />
-                
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LocalDeliveryAvailable)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @*@Html.DisplayFor(modelItem => item.Title)*@
-                @*@Html.ActionLink(item.Title, "Details", new { id = item.ProductId })*@
-                <a asp-action="Details" asp-route-id="@item.ProductId">@item.Title</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            @*<td>
-            @Html.DisplayFor(modelItem => item.Quantity)
-        </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Active)
-            </td>
-            <td>
-                @*@Html.DisplayFor(modelItem => item.ProductType.Label)*@
-                <a asp-controller="ProductTypes" asp-action="Details" asp-route-id="@item.ProductTypeId">@item.ProductType.Label</a>
-            </td>
-            @*<td>
-            <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
-            <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
-            <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
-        </td>*@
+            <tr>
+                <td>
 
-        </tr>
+                    <img class="img-thumbnail" style="max-width: 150px;" src="@Url.Content("~/images/" + item.ImagePath)" alt="" />
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LocalDeliveryAvailable)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCreated)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.Title)*@
+                    @*@Html.ActionLink(item.Title, "Details", new { id = item.ProductId })*@
+                    <a asp-action="Details" asp-route-id="@item.ProductId">@item.Title</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Active)
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.ProductType.Label)*@
+                    <a asp-controller="ProductTypes" asp-action="Details" asp-route-id="@item.ProductTypeId">@item.ProductType.Label</a>
+                </td>
+                @*<td>
+                        <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+                    </td>*@
+
+            </tr>
         }
     </tbody>
 </table>
