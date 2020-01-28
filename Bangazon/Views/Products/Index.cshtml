@@ -4,11 +4,11 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>All Products</h1>
 
 <p>
-    <div><a asp-action="Create">Create New</a></div>
-    @*<div class="searchWrapper">
+   @** <div><a asp-action="Create">Create New</a></div>
+    <div class="searchWrapper">
         <form class="searchBox">
             <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search Product" aria-label="Search">
         </form>
@@ -77,7 +77,9 @@
                 @Html.DisplayFor(modelItem => item.City)
             </td>
             <td>
-                <img class="img-responsive" src="@Url.Content("~/images/" + item.ImagePath)" alt="" />
+                <div class="image-container">
+                <img  src="@Url.Content("~/images/" + item.ImagePath)" alt="" />
+                </div>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Active)
