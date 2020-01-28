@@ -57,26 +57,7 @@ namespace Bangazon.Controllers
             //}
             //cmd.Parameters.Add(new SqlParameter("@searchString", "%" + search + "%"));
         }
-        // GET: Products/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var product = await _context.Product
-        //        .Include(p => p.ProductType)
-        //        .Include(p => p.User)
-        //        .FirstOrDefaultAsync(m => m.ProductId == id);
-        //    if (product == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(product);
-        //}
-        //
+       
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -84,10 +65,10 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
             var product = await _context.Product
-   .Include(p => p.ProductType)
-   .Include(p => p.User)
-   .Include(p => p.OrderProducts)
-   .FirstOrDefaultAsync(m => m.ProductId == id);
+                   .Include(p => p.ProductType)
+                   .Include(p => p.User)
+                   .Include(p => p.OrderProducts)
+                   .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
             {
                 return NotFound();

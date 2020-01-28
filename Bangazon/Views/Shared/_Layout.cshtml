@@ -54,17 +54,21 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li>
-                        <div class="searchWrapper">
-                            <form class="searchBox">
-                        <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search Product" aria-label="Search" asp-controller="Products" asp-action="Index">
-                        </form>
-                            </div>
-                            </li>
+
                     </ul>
+
                 </div>
+
             </div>
-        </nav>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <div class="searchWrapper">
+                    <form class="searchBox" asp-controller="Products" asp-action="Index">
+                        <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search Product" aria-label="Search" asp-controller="Products" asp-action="Index">
+                    </form>
+                </div>
+            }
+            </nav>
     </header>
     <div class="container">
         <partial name="_CookieConsentPartial" />
