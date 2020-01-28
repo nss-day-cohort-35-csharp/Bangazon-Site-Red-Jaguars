@@ -6,33 +6,30 @@
 
 <h1>Product Categories</h1>
 
-
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.TypeName)
             </th>
-          
         </tr>
     </thead>
-   <tbody>
-      @foreach (var productType in Model)
-       {
-    <tr>
-        <td> @Html.DisplayFor(modelItem => productType.TypeName) (@Html.DisplayFor(modelItem => productType.ProductCount))</td>
-        
-            
+    <tbody>
+        @foreach (var productType in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-controller="ProductTypes" asp-action="Details" asp-route-id="@productType.TypeId">@Html.DisplayFor(modelItem => productType.TypeName)</a>
+                    @*@Html.DisplayFor(modelItem => productType.TypeName)*@
+                    (@Html.DisplayFor(modelItem => productType.ProductCount))
+                </td>
                 @foreach (var product in productType.Products)
                 {
                     <td>
-                       <a asp-controller="Products" asp-action="Details" asp-route-Id="@product.ProductId"> @Html.DisplayFor(modelItem => product.Title)</a>
+                        <a asp-controller="Products" asp-action="Details" asp-route-Id="@product.ProductId"> @Html.DisplayFor(modelItem => product.Title)</a>
                     </td>
                 }
-            
-        
-    </tr>
-}
-    
- </tbody>
+            </tr>
+        }
+    </tbody>
 </table>
