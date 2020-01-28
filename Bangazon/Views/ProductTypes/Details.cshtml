@@ -1,4 +1,5 @@
-﻿@model Bangazon.Models.ProductType
+﻿@model IEnumerable<Bangazon.Models.ProducTypesViewModels.TypeWithProducts>
+
 
 @{
     ViewData["Title"] = "Details";
@@ -7,18 +8,47 @@
 <h1>Details</h1>
 
 <div>
-    <h4>ProductType</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Label)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Label)
-        </dd>
-    </dl>
+    <h4>Product Type : @Html.DisplayFor(model => Model.ToList()[0].TypeName)</h4>
 </div>
+
+<table class="table">
+    <thead>
+        @{var headerMetadata = Model.ToList()[0].Products.FirstOrDefault();}
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => headerMetadata.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => headerMetadata.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => headerMetadata.Price)
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var productType in Model)
+        {
+            @foreach (var item in productType.Products)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ProductTypeId">Edit</a> |
+    @*<a asp-action="Edit" asp-route-id="@Model.ProductTypeId">Edit</a> |*@
     <a asp-action="Index">Back to List</a>
 </div>
