@@ -145,11 +145,29 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> AddToOrder(Product product)
         {
             var user = await GetCurrentUserAsync();
+
+            //check if product is in stock
+
+            var productToCheck = await _context.Product
+               .Include(p => p.ProductType)
+               .Include(p => p.OrderProducts)
+               .FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
+
+            if (productToCheck.Quantity <= productToCheck.OrderProducts.Count)
+            {
+                TempData["OutOfStock"] = $"Beep-Boop!  Sorry {user.FirstName}, This item is currently out of stock!";
+                return RedirectToAction(nameof(Details));
+            }
+
             
-            var order = await _context.Order
+
+            //check to see if user has incompleted order
+                var order = await _context.Order
                 .FirstOrDefaultAsync(o => o.UserId == user.Id && o.DateCompleted == null);
+
             if (order == null)
             {
+                //create order
                 var newOrder = new Order
                 {
                     DateCreated = DateTime.Now,
@@ -159,16 +177,7 @@ namespace Bangazon.Controllers
                 await _context.SaveChangesAsync();
                 int id = newOrder.OrderId;
 
-                //check if product is in stock
-
-                //var product = await _context.Product
-                //   .Include(p => p.ProductType)
-                //   .Include(p => p.User)
-                //   .Include(p => p.OrderProducts)
-                //   .FirstOrDefaultAsync(m => m.ProductId == id);
-
-
-
+                //add product to order
                 var newOrderProduct = new OrderProduct
                 {
                     OrderId = id,
@@ -182,6 +191,7 @@ namespace Bangazon.Controllers
 
             } else
             {
+                //add product to existing order
                 var newOrderProduct = new OrderProduct
                 {
                     OrderId = order.OrderId,
