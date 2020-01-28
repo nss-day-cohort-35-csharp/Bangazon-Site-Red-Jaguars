@@ -108,6 +108,9 @@ namespace Bangazon.Controllers
 
             if (ModelState.IsValid)
             {
+                var currentUser = await GetCurrentUserAsync();
+                product.UserId = currentUser.Id;
+
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 //return RedirectToAction(nameof(Index));
@@ -127,12 +130,22 @@ namespace Bangazon.Controllers
             }
 
             var product = await _context.Product.FindAsync(id);
+
             if (product == null)
             {
                 return NotFound();
             }
+
+            var currentUser = await GetCurrentUserAsync();
+
+            if ( !product.UserId.Equals(currentUser.Id) )
+            {
+                return NotFound("Product does not belong to current user");
+            }
+
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
+
             return View(product);
         }
 
@@ -143,6 +156,13 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ProductId,LocalDeliveryAvailable,DateCreated,Description,Title,Price,Quantity,UserId,City,ImagePath,Active,ProductTypeId")] Product product)
         {
+            var currentUser = await GetCurrentUserAsync();
+
+            if ( !product.UserId.Equals( currentUser.Id ) )
+            {
+                return NotFound("Product does not belong to current user");
+            }
+
             if (id != product.ProductId)
             {
                 return NotFound();
