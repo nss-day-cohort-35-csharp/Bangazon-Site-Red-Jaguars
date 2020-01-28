@@ -44,8 +44,40 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
+            //var productType = await _context.ProductType
+            //    .FirstOrDefaultAsync(m => m.ProductTypeId == id);
+
+            var typeProduct = await _context.ProductType
+                .Include(pt => pt.Products)
+                .Select(pt => new TypeWithProducts()
+                {
+                    TypeId = pt.ProductTypeId,
+                    TypeName = pt.Label,
+                    ProductCount = pt.Products.Count(),
+                    Products = pt.Products.OrderByDescending(p => p.DateCreated).Take(3)
+                }).ToListAsync();
+
+
+            //if (productType == null)
+                if (typeProduct == null)
+                {
+                    return NotFound();
+            }
+
+            return View(typeProduct);
+        }
+
+        // GET: ProductTypes/
+        public async Task<IActionResult> Details(int? id, TypeWithProducts typeProducts)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var productType = await _context.ProductType
                 .FirstOrDefaultAsync(m => m.ProductTypeId == id);
+
             if (productType == null)
             {
                 return NotFound();
