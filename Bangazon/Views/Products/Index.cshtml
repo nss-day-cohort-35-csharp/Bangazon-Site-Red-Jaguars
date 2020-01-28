@@ -18,6 +18,9 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.ImagePath)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.LocalDeliveryAvailable)
             </th>
             <th>
@@ -33,13 +36,10 @@
                 @Html.DisplayNameFor(model => model.Price)
             </th>
             @*<th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>*@
+            @Html.DisplayNameFor(model => model.Quantity)
+        </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.City)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImagePath)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Active)
@@ -53,6 +53,11 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                
+                    <img class="img-thumbnail" src="@Url.Content("~/images/" + item.ImagePath)" alt="" />
+                
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.LocalDeliveryAvailable)
             </td>
@@ -71,16 +76,12 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             @*<td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>*@
+            @Html.DisplayFor(modelItem => item.Quantity)
+        </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.City)
             </td>
-            <td>
-                <div class="image-container">
-                <img  src="@Url.Content("~/images/" + item.ImagePath)" alt="" />
-                </div>
-            </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.Active)
             </td>

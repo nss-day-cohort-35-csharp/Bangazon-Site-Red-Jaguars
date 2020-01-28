@@ -9,7 +9,12 @@
 <div>
     <h4>Product</h4>
     <hr />
+
+    <div class="d-flex justify-content-center">
+        <img class="align-self-center mw-50" style="max-width:500px;" src="@Url.Content("~/images/" + Model.Product.ImagePath)" alt="" />
+    </div>
     <dl class="row">
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Product.LocalDeliveryAvailable)
         </dt>
@@ -66,7 +71,7 @@
         </dd>
 
     </dl>
-    <img class="img-responsive" src="@Url.Content("~/images/" + Model.ImagePath)" alt="" />
+
 </div>
 
 <form asp-controller="Orders" asp-action="AddToOrder">
