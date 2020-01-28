@@ -31,33 +31,37 @@ namespace Bangazon.Controllers
         // GET: Products
         public async Task<IActionResult> Index(string search)
         {
-
             if (string.IsNullOrWhiteSpace(search))
             {
                 var applicationDbContext = _context.Product
                     .Include(p => p.ProductType)
                     .Include(p => p.User);
+
                 return View(await applicationDbContext.ToListAsync());
             }
             else
             {
-                var applicationDbContext = _context.Product
-                    .Include(p => p.ProductType)
-                    .Include(p => p.User)
-                    //.FirstOrDefaultAsync(p => p.Title.Contains(search));
-                    .Where(p => p.Title.Contains(search));
+                if (!CityExist(search))
+                {
+                    var applicationDbContext = _context.Product
+                        .Include(p => p.ProductType)
+                        .Include(p => p.User)
+                        .Where(p => p.Title.Contains(search));
 
-                return View(await applicationDbContext.ToListAsync());
+                    return View(await applicationDbContext.ToListAsync());
+                }
+                else
+                {
+                    var applicationDbContext = _context.Product
+                        .Include(p => p.ProductType)
+                        .Include(p => p.User)
+                        .Where(p => p.City.Contains(search));
+
+                    return View(await applicationDbContext.ToListAsync());
+                }
             }
-
-            //cmd.CommandText = @"SELECT Id, PurchaseDate, DecomissionDate, Make, Model FROM Computer";
-            //if (!string.IsNullOrWhiteSpace(search))
-            //{
-            //    cmd.CommandText += @" WHERE Make LIKE @searchString OR Model LIKE @searchString";
-            //}
-            //cmd.Parameters.Add(new SqlParameter("@searchString", "%" + search + "%"));
         }
-       
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -87,8 +91,8 @@ namespace Bangazon.Controllers
             //SelectListItem newItem = new SelectListItem { Text = "Please choose product type", Value = "0" };
 
             //ViewData["ProductTypeId"] = new SelectList(selectList, new SelectListItem { Text = "Please choose product type", Value = "0" });
-            
-            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", new SelectListItem { Value = "0", Text="fake" } );
+
+            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", new SelectListItem { Value = "0", Text = "fake" });
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
             return View();
         }
@@ -204,7 +208,14 @@ namespace Bangazon.Controllers
         {
             return _context.Product.Any(e => e.ProductId == id);
         }
+        private bool CityExist(string city)
+        {
+            return _context.Product.Any(e => e.City.Contains(city));
+        }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
+
+
     }
 }
