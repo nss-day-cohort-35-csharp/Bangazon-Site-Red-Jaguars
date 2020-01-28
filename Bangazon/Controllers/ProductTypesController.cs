@@ -45,10 +45,18 @@ namespace Bangazon.Controllers
             }
 
             var productType = await _context.ProductType
-                .FirstOrDefaultAsync(m => m.ProductTypeId == id);
+                .Include(pt => pt.Products)
+                .Select(pt => new TypeWithProducts()
+                {
+                    TypeId = pt.ProductTypeId,
+                    TypeName = pt.Label,
+                    ProductCount = pt.Products.Count(),
+                    Products = pt.Products.Where(p => p.ProductTypeId == id)
+                }).ToListAsync();
+
             if (productType == null)
-            {
-                return NotFound();
+                {
+                    return NotFound();
             }
 
             return View(productType);
