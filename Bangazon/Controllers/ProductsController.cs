@@ -142,6 +142,10 @@ namespace Bangazon.Controllers
             viewModel.Active = true;
             if (ModelState.IsValid)
             {
+                //var currentUser = await GetCurrentUserAsync();
+                //product.UserId = currentUser.Id;
+                viewModel.UserId = user.Id;
+
                 var product = new Product()
                 {
                     Active = viewModel.Active,
@@ -164,7 +168,8 @@ namespace Bangazon.Controllers
                     product.ImagePath = fileName;
                 }
                 product.UserId = user.Id;
-                _context.Add(product);
+
+                _context.Add(viewModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -172,7 +177,6 @@ namespace Bangazon.Controllers
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", viewModel.ProductTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", viewModel.UserId);
             return View(viewModel);
-
         }
 
         // GET: Products/Edit/5
@@ -184,12 +188,25 @@ namespace Bangazon.Controllers
             }
 
             var product = await _context.Product.FindAsync(id);
+
             if (product == null)
             {
                 return NotFound();
             }
+
+            var currentUser = await GetCurrentUserAsync();
+
+            if ( !product.UserId.Equals(currentUser.Id) )
+            {
+                //return NotFound("Product does not belong to current user");
+                TempData["ErrorMessage"] = $"Sorry {currentUser.FirstName}, you can't edit this product.";
+                //return RedirectToAction("Edit", new { id = id });
+                return RedirectToAction("Index");
+            }
+
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
+
             return View(product);
         }
 
@@ -200,9 +217,20 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ProductId,LocalDeliveryAvailable,DateCreated,Description,Title,Price,Quantity,UserId,City,ImagePath,Active,ProductTypeId")] Product product)
         {
+            ModelState.Remove("User");
+
+            var currentUser = await GetCurrentUserAsync();
+
+            if ( !product.UserId.Equals( currentUser.Id ) )
+            {
+                //return NotFound("Product does not belong to current user");
+                TempData["ErrorMessage"] = $"Sorry {currentUser.FirstName}, you can't edit this product.";
+                return RedirectToAction("Edit");
+            }
+
             if (id != product.ProductId)
             {
-                return NotFound();
+                return NotFound("Wrong product Id");
             }
 
             if (ModelState.IsValid)
@@ -216,7 +244,7 @@ namespace Bangazon.Controllers
                 {
                     if (!ProductExists(product.ProductId))
                     {
-                        return NotFound();
+                        return NotFound("There no this product in table");
                     }
                     else
                     {
@@ -225,8 +253,10 @@ namespace Bangazon.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
+            
             return View(product);
         }
 
