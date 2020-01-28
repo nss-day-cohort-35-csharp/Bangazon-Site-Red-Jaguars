@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
@@ -51,7 +52,12 @@ namespace Bangazon.Models
         //[StringLength(99, ErrorMessage = "City name has to have less than 99 characters")]
         public string City { get; set; }
 
+        [Display(Name = "Picture")]
         public string ImagePath { get; set; }
+
+        [NotMapped]
+        public IFormFile File { get; set; }
+
 
         public bool Active { get; set; }
 
@@ -63,6 +69,7 @@ namespace Bangazon.Models
         [Range(1, Int32.MaxValue, ErrorMessage = "Please choose Product category")]
         public int ProductTypeId { get; set; }
 
+        [Display(Name = "Product Categorie")]
         public ProductType ProductType { get; set; }
 
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }
