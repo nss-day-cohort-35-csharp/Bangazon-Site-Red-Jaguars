@@ -11,8 +11,8 @@
     <h4>Product Type : @Html.DisplayFor(model => Model.ToList()[0].TypeName)</h4>
 </div>
 
-<table class="table">
-    <thead>
+<table class="table table-striped">
+    <thead class="thead-dark">
         @{var headerMetadata = Model.ToList()[0].Products.FirstOrDefault();}
         <tr>
             <th>

@@ -14,8 +14,8 @@
         </form>
     </div>*@
 </p>
-<table class="table">
-    <thead>
+<table class="table table-striped">
+    <thead class="thead-dark">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.ImagePath)
@@ -50,7 +50,7 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody >
         @foreach (var item in Model)
         {
         <tr>
