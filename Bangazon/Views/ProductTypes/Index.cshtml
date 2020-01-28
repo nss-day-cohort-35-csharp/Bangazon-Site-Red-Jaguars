@@ -14,25 +14,25 @@
                 @Html.DisplayNameFor(model => model.TypeName)
             </th>
           
-    </tr>
-</thead>
-<tbody>
-    @foreach (var productType in Model)
-    {
-    <td>
-        @Html.DisplayFor(modelItem => productType.TypeName) (@Html.DisplayFor(modelItem => productType.ProductCount))
-        <div>
-            <ul class="list-group">
+        </tr>
+    </thead>
+   <tbody>
+      @foreach (var productType in Model)
+       {
+    <tr>
+        <td> @Html.DisplayFor(modelItem => productType.TypeName) (@Html.DisplayFor(modelItem => productType.ProductCount))</td>
+        
+            
                 @foreach (var product in productType.Products)
                 {
-                    <li class="list-group-item">
+                    <td>
                        <a asp-controller="Products" asp-action="Details" asp-route-Id="@product.ProductId"> @Html.DisplayFor(modelItem => product.Title)</a>
-                    </li>
+                    </td>
                 }
-            </ul>
-        </div>
-    </td>
+            
+        
+    </tr>
 }
     
-    </tbody>
+ </tbody>
 </table>
