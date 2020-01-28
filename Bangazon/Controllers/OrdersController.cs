@@ -81,11 +81,18 @@ namespace Bangazon.Controllers
                 .Include(o => o.OrderProducts)
                     .ThenInclude(op => op.Product)
                 .FirstOrDefaultAsync(m => m.UserId == user.Id && m.DateCompleted == null);
-                if (order.OrderProducts.Count() == 0 || order == null)
+                if (order == null)
                 {
                     TempData["ErrorMessage"] = $"Sorry {user.FirstName}, your shopping cart is empty!"; 
                     return RedirectToAction("Index");
                     
+                }
+
+                if (order.OrderProducts.Count() == 0)
+                {
+                    TempData["ErrorMessage"] = $"Sorry {user.FirstName}, your shopping cart is empty!";
+                    return RedirectToAction("Index");
+
                 }
 
                 var shoppingCart = new OrderDetailViewModel(order);
@@ -128,6 +135,55 @@ namespace Bangazon.Controllers
             ViewData["PaymentTypeId"] = new SelectList(_context.PaymentType, "PaymentTypeId", "AccountNumber", order.PaymentTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", order.UserId);
             return View(order);
+        }
+
+        // POST: Orders/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddToOrder(Product product)
+        {
+            var user = await GetCurrentUserAsync();
+            
+            var order = await _context.Order
+                .FirstOrDefaultAsync(o => o.UserId == user.Id && o.DateCompleted == null);
+            if (order == null)
+            {
+                var newOrder = new Order
+                {
+                    DateCreated = DateTime.Now,
+                    UserId = user.Id
+                };
+                _context.Add(newOrder);
+                await _context.SaveChangesAsync();
+                int id = newOrder.OrderId;
+
+                var newOrderProduct = new OrderProduct
+                {
+                    OrderId = id,
+                    ProductId = product.ProductId
+                };
+
+                _context.OrderProduct.Add(newOrderProduct);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Details));
+
+            } else
+            {
+                var newOrderProduct = new OrderProduct
+                {
+                    OrderId = order.OrderId,
+                    ProductId = product.ProductId
+                };
+
+                _context.OrderProduct.Add(newOrderProduct);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Details));
+            }
+  
         }
 
         // GET: Orders/Edit/5
