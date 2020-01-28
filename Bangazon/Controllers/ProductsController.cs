@@ -165,7 +165,7 @@ namespace Bangazon.Controllers
 
             if (id != product.ProductId)
             {
-                return NotFound();
+                return NotFound("Wrong product Id");
             }
 
             if (ModelState.IsValid)
@@ -179,7 +179,7 @@ namespace Bangazon.Controllers
                 {
                     if (!ProductExists(product.ProductId))
                     {
-                        return NotFound();
+                        return NotFound("There no this product in table");
                     }
                     else
                     {
@@ -188,8 +188,10 @@ namespace Bangazon.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
+            
             return View(product);
         }
 
