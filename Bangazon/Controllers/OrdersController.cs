@@ -159,6 +159,16 @@ namespace Bangazon.Controllers
                 await _context.SaveChangesAsync();
                 int id = newOrder.OrderId;
 
+                //check if product is in stock
+
+                var product = await _context.Product
+                   .Include(p => p.ProductType)
+                   .Include(p => p.User)
+                   .Include(p => p.OrderProducts)
+                   .FirstOrDefaultAsync(m => m.ProductId == id);
+
+
+
                 var newOrderProduct = new OrderProduct
                 {
                     OrderId = id,
