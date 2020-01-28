@@ -55,7 +55,7 @@ namespace Bangazon.Controllers
                     var applicationDbContext = _context.Product
                         .Include(p => p.ProductType)
                         .Include(p => p.User)
-                        .Where(p => p.City.Contains(search));
+                        .Where(p => p.City.Equals(search));
 
                     return View(await applicationDbContext.ToListAsync());
                 }
@@ -210,7 +210,7 @@ namespace Bangazon.Controllers
         }
         private bool CityExist(string city)
         {
-            return _context.Product.Any(e => e.City.Contains(city));
+            return _context.Product.Any(e => e.City.Equals(city));
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
