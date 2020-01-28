@@ -7,45 +7,83 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Bangazon.Data;
 using Bangazon.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Bangazon.Models.ProductViewModels;
 
 namespace Bangazon.Controllers
 {
+    [Authorize]
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ProductsController(ApplicationDbContext context)
+        public ProductsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+
+        //code to grab user
+        //  var user = await GetCurrentUserAsync();
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
-            var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User);
-            return View(await applicationDbContext.ToListAsync());
+            if (string.IsNullOrWhiteSpace(search))
+            {
+                var applicationDbContext = _context.Product
+                    .Include(p => p.ProductType)
+                    .Include(p => p.User);
+
+                return View(await applicationDbContext.ToListAsync());
+            }
+            else
+            {
+                if (!CityExist(search))
+                {
+                    var applicationDbContext = _context.Product
+                        .Include(p => p.ProductType)
+                        .Include(p => p.User)
+                        .Where(p => p.Title.Contains(search));
+
+                    return View(await applicationDbContext.ToListAsync());
+                }
+                else
+                {
+                    var applicationDbContext = _context.Product
+                        .Include(p => p.ProductType)
+                        .Include(p => p.User)
+                        .Where(p => p.City.Equals(search));
+
+                    return View(await applicationDbContext.ToListAsync());
+                }
+            }
         }
 
-        // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-
             var product = await _context.Product
-                .Include(p => p.ProductType)
-                .Include(p => p.User)
-                .FirstOrDefaultAsync(m => m.ProductId == id);
+                   .Include(p => p.ProductType)
+                   .Include(p => p.User)
+                   .Include(p => p.OrderProducts)
+                   .FirstOrDefaultAsync(m => m.ProductId == id);
             if (product == null)
             {
                 return NotFound();
             }
-
-            return View(product);
+            var productDetail = new ProductDetailViewModel()
+            {
+                Product = product,
+                Inventory = product.Quantity - product.OrderProducts.Count()
+            }; return View(productDetail);
         }
-
+        //
         // GET: Products/Create
         public IActionResult Create()
         {
@@ -53,8 +91,8 @@ namespace Bangazon.Controllers
             //SelectListItem newItem = new SelectListItem { Text = "Please choose product type", Value = "0" };
 
             //ViewData["ProductTypeId"] = new SelectList(selectList, new SelectListItem { Text = "Please choose product type", Value = "0" });
-            
-            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", new SelectListItem { Value = "0", Text="fake" } );
+
+            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", new SelectListItem { Value = "0", Text = "fake" });
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
             return View();
         }
@@ -170,5 +208,14 @@ namespace Bangazon.Controllers
         {
             return _context.Product.Any(e => e.ProductId == id);
         }
+        private bool CityExist(string city)
+        {
+            return _context.Product.Any(e => e.City.Equals(city));
+        }
+
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
+
+
     }
 }

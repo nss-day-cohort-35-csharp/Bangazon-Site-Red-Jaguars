@@ -1,4 +1,4 @@
-﻿@model Bangazon.Models.Product
+﻿@model Bangazon.Models.ProductViewModels.ProductDetailViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -11,48 +11,48 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LocalDeliveryAvailable)
+            @Html.DisplayNameFor(model => model.Product.LocalDeliveryAvailable)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LocalDeliveryAvailable)
+            @Html.DisplayFor(model => model.Product.LocalDeliveryAvailable)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateCreated)
+            @Html.DisplayNameFor(model => model.Product.DateCreated)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateCreated)
+            @Html.DisplayFor(model => model.Product.DateCreated)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.Product.Description)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.Product.Description)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.Product.Title)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
+            @Html.DisplayFor(model => model.Product.Title)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
+            @Html.DisplayNameFor(model => model.Product.Price)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
+            @Html.DisplayFor(model => model.Product.Price)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Quantity)
+            @Html.DisplayNameFor(model => model.Inventory)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Quantity)
+            @Html.DisplayFor(model => model.Inventory)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.City)
+            @Html.DisplayNameFor(model => model.Product.City)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.City)
+            @Html.DisplayFor(model => model.Product.City)
         </dd>
-        <dt class = "col-sm-2">
+        @*<dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ImagePath)
         </dt>
         <dd class = "col-sm-10">
@@ -69,16 +69,22 @@
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.User.Id)
-        </dd>
+        </dd>*@
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductType)
+            @Html.DisplayNameFor(model => model.Product.ProductType)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProductType.Label)
+            @Html.DisplayFor(model => model.Product.ProductType.Label)
         </dd>
     </dl>
 </div>
+
+<form asp-controller="Orders" asp-action="AddToOrder">
+    <input type="hidden" asp-for="Product.ProductId" />
+    <input type="submit" value="Add to Cart" class="btn btn-success" />
+
+</form>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ProductId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @*<a asp-action="Edit" asp-route-id="@Model.ProductId">Edit</a> |*@
+    <a asp-action="Index">Back to Products</a>
 </div>
