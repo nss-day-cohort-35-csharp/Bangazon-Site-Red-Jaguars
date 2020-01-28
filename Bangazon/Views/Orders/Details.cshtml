@@ -5,6 +5,7 @@
 @{
     ViewData["Title"] = "Details";
 }
+    <h2 class="alert-danger">@TempData["OutOfStock"]</h2>
 @if (Model.Order.DateCompleted == null)
 {<h1>Shopping Cart</h1>}
 

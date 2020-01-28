@@ -64,6 +64,19 @@ namespace Bangazon.Controllers
             }
         }
 
+        public async Task<IActionResult> MyProducts()
+        {
+            var user = await GetCurrentUserAsync();
+
+
+            var applicationDbContext = _context.Product
+                .Include(p => p.OrderProducts)
+                .Where(p => p.UserId == user.Id);
+
+            return View(await applicationDbContext.ToListAsync());
+                
+        }
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
