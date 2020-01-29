@@ -169,7 +169,7 @@ namespace Bangazon.Controllers
                 }
                 product.UserId = user.Id;
 
-                _context.Add(viewModel);
+                _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
