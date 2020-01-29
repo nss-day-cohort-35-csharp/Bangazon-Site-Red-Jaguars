@@ -27,8 +27,8 @@ namespace Bangazon.Controllers
             _userManager = userManager;
         }
 
-        //code to grab user
-        //  var user = await GetCurrentUserAsync();
+        //code to grab current user
+        //var user = await GetCurrentUserAsync();
 
         // GET: Products
         public async Task<IActionResult> Index(string search)
@@ -68,13 +68,11 @@ namespace Bangazon.Controllers
         {
             var user = await GetCurrentUserAsync();
 
-
             var applicationDbContext = _context.Product
                 .Include(p => p.OrderProducts)
                 .Where(p => p.UserId == user.Id);
 
             return View(await applicationDbContext.ToListAsync());
-                
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -83,24 +81,25 @@ namespace Bangazon.Controllers
             {
                 return NotFound();
             }
+
             var product = await _context.Product
                    .Include(p => p.ProductType)
                    .Include(p => p.User)
                    .Include(p => p.OrderProducts)
                    .FirstOrDefaultAsync(m => m.ProductId == id);
+
             if (product == null)
             {
                 return NotFound();
             }
 
-
             var productDetail = new ProductDetailViewModel()
-
             {
 
                 Product = product,
                 Inventory = product.Quantity - product.OrderProducts.Count()
             };
+
             if (product.File != null && product.File.Length > 0)
             {
                 var fileName = Path.GetFileName(productDetail.File.FileName); //getting path of actual file name
@@ -110,19 +109,10 @@ namespace Bangazon.Controllers
 
             return View(productDetail);
         }
-       
-    
-            
-        
-        //
+
         // GET: Products/Create
         public IActionResult Create()
         {
-            //var selectList = new SelectList(_context.ProductType, "ProductTypeId", "Label");
-            //SelectListItem newItem = new SelectListItem { Text = "Please choose product type", Value = "0" };
-
-            //ViewData["ProductTypeId"] = new SelectList(selectList, new SelectListItem { Text = "Please choose product type", Value = "0" });
-
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", new SelectListItem { Value = "0", Text = "fake" });
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
             return View();
@@ -188,19 +178,15 @@ namespace Bangazon.Controllers
             }
 
             var product = await _context.Product.FindAsync(id);
-
             if (product == null)
             {
                 return NotFound();
             }
 
             var currentUser = await GetCurrentUserAsync();
-
-            if ( !product.UserId.Equals(currentUser.Id) )
+            if (!product.UserId.Equals(currentUser.Id))
             {
-                //return NotFound("Product does not belong to current user");
                 TempData["ErrorMessage"] = $"Sorry {currentUser.FirstName}, you can't edit this product.";
-                //return RedirectToAction("Edit", new { id = id });
                 return RedirectToAction("Index");
             }
 
@@ -220,10 +206,8 @@ namespace Bangazon.Controllers
             ModelState.Remove("User");
 
             var currentUser = await GetCurrentUserAsync();
-
-            if ( !product.UserId.Equals( currentUser.Id ) )
+            if (!product.UserId.Equals(currentUser.Id))
             {
-                //return NotFound("Product does not belong to current user");
                 TempData["ErrorMessage"] = $"Sorry {currentUser.FirstName}, you can't edit this product.";
                 return RedirectToAction("Edit");
             }
@@ -253,10 +237,10 @@ namespace Bangazon.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            
+
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Label", product.ProductTypeId);
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", product.UserId);
-            
+
             return View(product);
         }
 
@@ -272,9 +256,17 @@ namespace Bangazon.Controllers
                 .Include(p => p.ProductType)
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
+
             if (product == null)
             {
                 return NotFound();
+            }
+
+            var currentUser = await GetCurrentUserAsync();
+            if (!product.UserId.Equals(currentUser.Id))
+            {
+                TempData["ErrorMessage"] = $"Sorry {currentUser.FirstName}, you can't delete this product.";
+                return RedirectToAction("Index");
             }
 
             return View(product);
@@ -301,8 +293,5 @@ namespace Bangazon.Controllers
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
-
-
-
     }
 }
